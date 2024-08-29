@@ -1,0 +1,47 @@
+import random
+
+class SlotMachine:
+    def __init__(self):
+        self.symbols = ["Cherry", "Bell", "Lemon", "Orange", "Star", "Skull"]
+        self.player_money = 100
+
+    def spin(self):
+        return [random.choice(self.symbols) for _ in range(3)]
+
+    def check_win(self, result):
+        if len(set(result)) == 1:
+            return 10  # All symbols match
+        elif len(set(result)) == 2:
+            return 5   # Two symbols match
+        return 0       # No matches
+
+    def play(self):
+        while self.player_money > 0:
+            print(f"\nYour current balance: ${self.player_money}")
+            bet = int(input("Enter your bet amount (or 0 to quit): "))
+            
+            if bet == 0:
+                print("Thanks for playing!")
+                break
+            elif bet > self.player_money:
+                print("You don't have enough money for that bet.")
+                continue
+
+            self.player_money -= bet
+            result = self.spin()
+            print(f"Result: {result}")
+
+            win_amount = self.check_win(result) * bet
+            self.player_money += win_amount
+
+            if win_amount > 0:
+                print(f"You won ${win_amount}!")
+            else:
+                print("Sorry, you didn't win this time.")
+
+        if self.player_money <= 0:
+            print("Game over! You've run out of money.")
+
+if __name__ == "__main__":
+    game = SlotMachine()
+    game.play()
